@@ -1,0 +1,22 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "An E-commerce app.",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-dipanshu/E-commerce.git"
+  },
+  "keywords": [
+    "e-commerce"
+  ],
+  "author": "Dipanshu Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/i-dipanshu/E-commerce/issues"
+  },
+  "homepage": "https://github.com/i-dipanshu/E-commerce#readme"
+}

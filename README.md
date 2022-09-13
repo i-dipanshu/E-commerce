@@ -1,1 +1,1 @@
-# My Framework for an ecommerce site
+# My Model for an ecommerce site

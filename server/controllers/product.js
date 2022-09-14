@@ -10,6 +10,9 @@ import Product from "../models/product.js";
 // function to create a new product --> admin
 
 export const createProduct = handleAsyncErrors(async (req, res, next) => {
+  // user is appended to req earlyhand by isUserAuthenticted
+  // appends id from req.user to req.body.user
+  req.body.user = req.user.id;
 
   // creates a new document in the product schema
   // from the json data from req.body

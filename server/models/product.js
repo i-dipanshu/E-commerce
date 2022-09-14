@@ -43,6 +43,11 @@ const productSchema = new Schema({
       comment: { type: String, required: [true, "Enter a valid comment for the image"] },
     },
   ],
+  user:{
+    type: Schema.ObjectId,
+    ref: "User",
+    required: true 
+  },
   createdAt: {
     type: Date,
     default: Date.now,

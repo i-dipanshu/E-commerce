@@ -1,24 +1,52 @@
-import jwt from 'jsonwebtoken'
-
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 import handleAsyncErrors from "./asyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
 
-export default handleAsyncErrors(async (req, res, next) => {
+/* ------------------------------------------------------------------- */
 
-    // storing cookies from request body
-    const token = req.cookies;
+// determines whether the user is logged in or not
+export const isUserAuthenticted = handleAsyncErrors(async (req, res, next) => {
 
-    // if cookie not found
-    if(!token){
-        return next(new ErrorHandler(401, "Please login to access this resorces."))
+  // destructure token from  cookies from request body
+  const { token } = req.cookies;
+
+  // if cookie not found
+  if (!token) {
+    return next(new ErrorHandler(401, "Please login to access this resorces."));
+  }
+
+  // decode the cookies (or token)
+  const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+
+  // find the user using id from decodedData and store the user in req.user
+  req.user = await User.findById(decodedData.id);
+
+  // calling next functions
+  next();
+});
+
+/* ------------------------------------------------------------------- */
+
+// it verifies a user is admin or not
+export const isRole = (...roles) => {
+  return (req, res, next) => {
+    // if role is other than admin
+    // req.user.role --> pulling role from user stored request
+    // available only if isAuthenticated has already run
+    // because that appends the user to request 
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ErrorHandler(
+          403,
+          `Role: ${req.user.role} can't access this resource`
+        )
+      );
     }
 
-    // decode the cookies (or token)
-    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
-
-    // storing id from decodedData in request body 
-    req.body = await User.findById(decodedData.id);
-
-    // calling next functions
+    // and if role is admin
     next();
-});
+  };
+};
+
+/* ------------------------------------------------------------------- */

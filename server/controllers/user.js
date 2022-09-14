@@ -3,7 +3,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 
 // model import
 import User from "../models/user.js";
-import token  from "../utils/tokenGenerator.js";
+import token from "../utils/tokenGenerator.js";
 
 /* ----------------------------------------------------------------------------------------------------------------- */
 
@@ -30,33 +30,51 @@ export const createNewUser = handleAsyncErrors(async (req, res, next) => {
 // Login a user
 
 export const loginUser = handleAsyncErrors(async (req, res, next) => {
+  // destruct email and password from request body
+  const { email, password } = req.body;
 
-    // destruct email and password from request body
-    const { email, password } = req.body;
+  // checking if both email and password are present
+  if (!email || !password) {
+    return next(
+      new ErrorHandler(400, "Please enter a valid Email or Password.")
+    );
+  }
 
-    // checking if both email and password are present
-    if(!email || !password ){
-        return next(new ErrorHandler(400, "Please enter a valid Email or Password."));
-    }
+  // if both are present, search for the user in database
+  const user = await User.findOne({ email }).select("+password");
 
-    // if both are present, search for the user in database
-    const user = await User.findOne({email}).select("+password");
+  // if email doesn't exist in database
+  if (!user) {
+    return next(
+      new ErrorHandler(401, "Please a enter a valid Email or Password.")
+    );
+  }
 
-    // if email doesn't exist in database
-    if(!user){
-        return next(new ErrorHandler(401, "Please a enter a valid Email or Password."));
-    }
+  // matching the passwords
+  const isPasswordCorrect = user.comparePassword(password);
 
-    // matching the passwords
-    const isPasswordCorrect = user.comparePassword(password);
+  // if password doesn't match
+  if (!isPasswordCorrect) {
+    return next(
+      new ErrorHandler(401, "Please enter a valid Email or Password.")
+    );
+  }
 
-    // if password doesn't match
-    if(!isPasswordCorrect){
-        return next(new ErrorHandler(401, "Please enter a valid Email or Password."))
-    }
-
-    // creating a JWT token and cookie --> sending a response
-    token(user, 200, res);
+  // creating a JWT token and cookie --> sending a response
+  token(user, 200, res);
 });
 
 /* ------------------------------------------------------------------------------------------------------------------- */
+
+// Logout a logged in user
+
+export const logoutUser = handleAsyncErrors((req, res, next) => {
+  // force expire the duration of cookie
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: false,
+  });
+
+  // response
+  res.status(200).json({success: true, message: "Logged Out Successfully"})
+});

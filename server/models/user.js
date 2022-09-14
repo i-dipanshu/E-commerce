@@ -2,6 +2,9 @@ import mongoose, { Schema } from "mongoose";
 import validator from "validator";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto, { createHash } from 'crypto'
+
+/* ------------------------------------------------------------------------------------- */
 
 const userSchema = new Schema({
   name: {
@@ -34,7 +37,11 @@ const userSchema = new Schema({
   resetPasswordExpire: Date,
 });
 
+/* ------------------------------------------------------------------------------------- */
+
 // methods
+
+/* ------------------------------------------------------------------------------------- */
 
 // this function runs before saving the document to database
 userSchema.pre("save", async function (next) {
@@ -49,12 +56,35 @@ userSchema.pre("save", async function (next) {
 
 // JWT Token
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES,});
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES,
+  });
 };
 
-// comparing password 
-userSchema.methods.comparePassword = async function(enteredPassword) {
-    return await bcryptjs.compare(enteredPassword, this.password);
-}
+/* ------------------------------------------------------------------------------------- */
+
+// comparing password
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcryptjs.compare(enteredPassword, this.password);
+};
+
+/* ------------------------------------------------------------------------------------- */
+
+// Generate Reset Password Token
+userSchema.methods.getResetPasswordToken = function () {
+  // creating a random hex string
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hashing Token and adding to resetPasswordToken
+  this.resetPasswordToken = createHash("sha256").update(resetToken).digest("hex");
+
+  // Adding to resetPasswordExpire
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  // return the resetToken to mail to user
+  return resetToken;
+};
+
+/* ------------------------------------------------------------------------------------- */
 
 export default mongoose.model("User", userSchema);

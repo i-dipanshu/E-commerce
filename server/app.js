@@ -3,6 +3,7 @@ import express from 'express';
 import error from "./middlewares/erorr.js";
 // routes import
 import product from './routes/product.js';
+import user from './routes/user.js'
 
 const app = express();
 
@@ -11,7 +12,9 @@ app.use(express.json()); // parses the req into json where header's content-type
 app.use(error);  // middleware to handle error
 
 // routes at 'localhost:5000/...'
-app.use('/api/v1/', product);
+app.use('/api/v1', product);
+
+app.use('/api/v1', user);
 
 
 export default app;

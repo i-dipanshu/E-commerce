@@ -1,15 +1,27 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
+
 // middleware imports
-import error from "./middlewares/erorr.js";
+import handleError from "./middlewares/erorr.js";
+
 // routes import
 import product from './routes/product.js';
 import user from './routes/user.js'
 
+// alias to express() function
 const app = express();
 
 // middlewares
-app.use(express.json()); // parses the req into json where header's content-type is application/json
-app.use(error);  // middleware to handle error
+
+// parses the request body into json <--> header's content-type must be application/json
+app.use(express.json()); 
+
+// middleware to parse cookies
+app.use(cookieParser());
+
+// middleware to handle all the errors
+app.use(handleError);  
+
 
 // routes at 'localhost:5000/...'
 app.use('/api/v1', product);

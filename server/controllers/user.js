@@ -1,4 +1,4 @@
-import asyncError from "../middlewares/asyncError.js";
+import handleAsyncErrors from "../middlewares/asyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
 
 // model import
@@ -7,8 +7,9 @@ import token  from "../utils/tokenGenerator.js";
 
 /* ----------------------------------------------------------------------------------------------------------------- */
 
-// Register a new User
-export const createNewUser = asyncError(async (req, res, next) => {
+// Register a new user
+
+export const createNewUser = handleAsyncErrors(async (req, res, next) => {
   // desturct name, email and password from request body
   const { name, email, password } = req.body;
 
@@ -26,8 +27,9 @@ export const createNewUser = asyncError(async (req, res, next) => {
 
 /* ------------------------------------------------------------------------------------------------------------------- */
 
-// login a user
-export const loginUser = asyncError(async (req, res, next) => {
+// Login a user
+
+export const loginUser = handleAsyncErrors(async (req, res, next) => {
 
     // destruct email and password from request body
     const { email, password } = req.body;
@@ -56,3 +58,5 @@ export const loginUser = asyncError(async (req, res, next) => {
     // creating a JWT token and cookie --> sending a response
     token(user, 200, res);
 });
+
+/* ------------------------------------------------------------------------------------------------------------------- */

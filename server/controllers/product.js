@@ -1,4 +1,4 @@
-import asyncError from "../middlewares/asyncError.js";
+import handleAsyncErrors from "../middlewares/asyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import ApiFeature from "../utils/apiFeature.js";
 
@@ -8,7 +8,8 @@ import Product from "../models/product.js";
 /* -------------------------------------------------------------------------------------------- */
 
 // function to create a new product --> admin
-export const createProduct = asyncError(async (req, res, next) => {
+
+export const createProduct = handleAsyncErrors(async (req, res, next) => {
 
   // creates a new document in the product schema
   // from the json data from req.body
@@ -23,7 +24,8 @@ export const createProduct = asyncError(async (req, res, next) => {
 /* -------------------------------------------------------------------------------------------- */
 
 //function to get all products from database
-export const getAllProduct = asyncError(async (req, res) => {
+
+export const getAllProduct = handleAsyncErrors(async (req, res) => {
 
   // product per page
   const resultperpage = 5;
@@ -45,7 +47,8 @@ export const getAllProduct = asyncError(async (req, res) => {
 /* -------------------------------------------------------------------------------------------- */
 
 // function to a details of a single product
-export const getProduct = asyncError(async (req, res, next) => {
+
+export const getProduct = handleAsyncErrors(async (req, res, next) => {
 
   // find a document of product using its id
   const product = await Product.findById(req.params.id);
@@ -62,7 +65,8 @@ export const getProduct = asyncError(async (req, res, next) => {
 /* -------------------------------------------------------------------------------------------- */
 
 //function to update a existing product
-export const updateProduct = asyncError(async (req, res) => {
+
+export const updateProduct = handleAsyncErrors(async (req, res) => {
 
   // find the product from its id
   let product = await Product.findById(req.params.id);
@@ -87,7 +91,8 @@ export const updateProduct = asyncError(async (req, res) => {
 /* -------------------------------------------------------------------------------------------- */
 
 //function to  delete a existing product from database
-export const deleteProduct = asyncError(async (req, res, next) => {
+
+export const deleteProduct = handleAsyncErrors(async (req, res, next) => {
   
   // finds a document using the id from the req
   const product = await Product.findById(req.params.id);

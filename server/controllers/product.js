@@ -1,29 +1,31 @@
 // model imports
-import mongoose from "mongoose";
 import Product from "../models/product.js";
+
 import asyncError from "../middlewares/asyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
-
+import ApiFeature from "../utils/apiFeature.js";
 
 // --------------------------------------------------------------------------------------------
 
 // function to create a new product --> admin
 export const createProduct = asyncError(async (req, res, next) => {
-    // creates a new document in the product schema
-    // from the json data from req.body
-    const product = await Product.create(req.body);
-    res.status(201).json({
-      success: true,
-      product,
-    });
-  })
+  // creates a new document in the product schema
+  // from the json data from req.body
+  const product = await Product.create(req.body);
+  res.status(201).json({
+    success: true,
+    product,
+  });
+});
 
 // -----------------------------------------------------------------------------------------------------
 
 //function to get all products from database
 export const getAllProduct = asyncError(async (req, res) => {
+  // (query, queryStr) --> queryStr is keywords
+  const apiFeature = new ApiFeature(Product.find(), req.query).search().filter();
   // Creates a find query: gets a list of documents that match filter.
-  const products = await Product.find();
+  const products = await apiFeature.query;
   res.status(200).json({
     success: true,
     products,
@@ -87,7 +89,7 @@ export const deleteProduct = asyncError(async (req, res, next) => {
 
   // if the product is not found
   if (!product) {
-    return next(ErrorHandler(404, "Product not found"))
+    return next(ErrorHandler(404, "Product not found"));
   }
 
   // if the product is found

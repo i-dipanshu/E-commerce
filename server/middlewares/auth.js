@@ -8,7 +8,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 // determines whether the user is logged in or not
 export const isUserAuthenticted = handleAsyncErrors(async (req, res, next) => {
 
-  // destructure token from  cookies from request body
+  // destructure token from  cookies from request
   const { token } = req.cookies;
 
   // if cookie not found

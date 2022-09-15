@@ -54,7 +54,7 @@ userSchema.pre("save", async function (next) {
   this.password = await bcryptjs.hash(this.password, 10);
 });
 
-// JWT Token
+// JWT Token Generator
 userSchema.methods.getJWTToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
@@ -71,15 +71,15 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 /* ------------------------------------------------------------------------------------- */
 
 // Generate Reset Password Token
-userSchema.methods.getResetPasswordToken = function () {
+userSchema.methods.getResetPasswordToken = async function () {
   // creating a random hex string
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   // Hashing Token and adding to resetPasswordToken
-  this.resetPasswordToken = createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
   // Adding to resetPasswordExpire
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
   // return the resetToken to mail to user
   return resetToken;

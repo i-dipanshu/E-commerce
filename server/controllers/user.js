@@ -53,7 +53,7 @@ export const loginUser = handleAsyncErrors(async (req, res, next) => {
   }
 
   // matching the passwords
-  const isPasswordCorrect = user.comparePassword(password);
+  const isPasswordCorrect = await user.comparePassword(password);
 
   // if password doesn't match
   if (!isPasswordCorrect) {
@@ -159,4 +159,129 @@ export const resetPassword = handleAsyncErrors(async(req, res, next) => {
 
   // login the user with new jwt token
   token(user, 200, res);
+});
+
+/* ---------------------------------------------------------------------------------------- */
+
+// get user details -- login required
+export const getUserDetails = handleAsyncErrors(async(req, res, next) => {
+  // find the user from id stored in req.user
+  const user = await User.findById(req.user.id);
+
+  // response
+  res.status(200).json({success: true, user});
+});
+
+/* ------------------------------------------------------------------------------------------ */
+
+// update password -- login required
+export const updatePassword = handleAsyncErrors(async(req, res, next) => {
+  // destruct passwords from req.body
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  // find the user by id in req.user and append the password alongwith  
+  const user = await User.findById(req.user.id).select("+password");
+
+  // compare the passwords
+  const isPasswordMatched = await user.comparePassword(oldPassword);
+
+  // if password does not match
+  if(!isPasswordMatched){
+    return next(new ErrorHandler(401, "Incorrect Password"));
+  }
+
+  // if password is matched, check for password and confirmPassword
+  if(!newPassword === confirmPassword){
+    return next(new ErrorHandler(400, "Password don't match, Try again"));
+  }
+
+  // if everything goes fine
+  user.password = req.body.newPassword;
+
+  // save after updating
+  await user.save();
+
+  // login and send token
+  token(user, 200, res);
+});
+
+/* ------------------------------------------------------------------------------------------------- */
+
+// user profile update -- login required
+export const updateProfile = handleAsyncErrors(async(req, res, next) => {
+  // new user data
+  const newData = {name:req.body.name, email:req.body.email, };
+
+  // find the user by id in req.user | update the existing data
+  const user = await User.findByIdAndUpdate(req.user.id, newData, {new: true, runValidators: true, useFindAndModify: true});
+
+  // response
+  res.status(200).json({success: true, user});
+
+});
+
+/* ---------------------------------------   admin     ---------------------------------------*/
+
+
+// get all users -- for admin
+export const getAllUsers = handleAsyncErrors(async(req, res, next) => {
+  // finding all the users
+  const users = await User.find();
+
+  // response
+  res.status(200).json({success:true, users});
+});
+
+/* ------------------------------------------------------------------------------------------------- */
+
+// get single user -- for admin
+export const getUser = handleAsyncErrors(async(req, res, next) => {
+  // find the user by id in req parameters
+  const user = await User.findById(req.params.id);
+
+  // if user not found
+  if(!user){
+    return next(new ErrorHandler(404, `User not found with id: ${req.params.id}`))
+  }
+
+  // if found
+  res.status(200).json({success: true, user});
+});
+
+/* ------------------------------------------------------------------------------------------------- */
+
+// user profile update -- login required -- admin
+export const updateProfileAdmin = handleAsyncErrors(async(req, res, next) => {
+  // new user data
+  const newData = {name:req.body.name, email:req.body.email, role:req.body.role, };
+
+  // find the user by id in req.user | update the existing data
+  const user = await User.findByIdAndUpdate(req.params.id, newData, {new: true, runValidators: true, useFindAndModify: true});
+
+  // if user not found
+  if(!user){
+    return next(new ErrorHandler(404, `User not found with id: ${req.params.id}`))
+  }
+
+  // response
+  res.status(200).json({success: true, user});
+
+});
+
+/* -------------------------------------------------------------------------------------------------------- */
+
+// delete a user -- admin
+export const deleteUser = handleAsyncErrors(async(req, res, next) => {
+  // find the user by id
+  const user = await User.findByIdAndDelete(req.params.id);
+
+  // if user not found
+  if(!user){
+    return next(new ErrorHandler(404, `User not found with id: ${req.params.id}`))
+  }
+
+  // if found then delete
+  await user.remove();
+
+  res.status(200).json({success: true, message: "User deleted Successfully"});
 })

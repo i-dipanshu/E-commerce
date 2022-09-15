@@ -13,12 +13,16 @@ const router = express.Router();
 // route to list all products
 router.get("/products", getAllProduct);
 
+// route to a single product and its details
+router.get("/product/:id", getProduct);
+
+/* --------- auth and admin roles ------ */
+
 // route to create a new product
-router.post("/product/new", isUserAuthenticted, isRole("admin"), isUserAuthenticted, createProduct); 
+router.post("admin/product/new", isUserAuthenticted, isRole("admin"), createProduct); 
 
 // route to --> list a product(get) | update a product (put) | delete a product(delete)
-router.route("/product/:id").get(getProduct).put(isUserAuthenticted, isRole("admin"),updateProduct).delete(isUserAuthenticted, isRole("admin"), deleteProduct); 
-
+router.route("admin/product/:id").put(isUserAuthenticted, isRole("admin"),updateProduct).delete(isUserAuthenticted, isRole("admin"), deleteProduct); 
 
 /* ---------------------------------------------- */
 

@@ -69,7 +69,7 @@ export const getProduct = handleAsyncErrors(async (req, res, next) => {
 
 //function to update a existing product
 
-export const updateProduct = handleAsyncErrors(async (req, res) => {
+export const updateProduct = handleAsyncErrors(async (req, res, next) => {
 
   // find the product from its id
   let product = await Product.findById(req.params.id);

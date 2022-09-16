@@ -118,3 +118,106 @@ export const deleteProduct = handleAsyncErrors(async (req, res, next) => {
 
 /* -------------------------------------------------------------------------------------------- */
 
+// Create a review or update it
+
+export const createProductReview = handleAsyncErrors(async (req, res, next) => {
+  // destrucrt rating, comment and product from req body
+  const { rating, comment, productId } = req.body;
+
+  // store the document feild (reviews feilds)
+  const review = {
+    user: req.user.id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment
+  }
+
+  //find the product using its id
+  const product = await Product.findById(productId);
+
+  // checking there if a review already exists with the user
+  const isReviewed = product.reviews.find(rev => rev.user.toString() === req.user.id.toString());
+
+  // if yes, just update it
+  if(isReviewed){
+    product.reviews.forEach(rev => {
+      // checking for user in rev and user logged in are same 
+      if(rev.user.toString() === req.user._id.toString()){
+        rev.rating = rating;
+        rev.comment = comment;
+      }
+    });
+  }else{
+    // if not push the whole review object in reviews
+    product.reviews.push(review);
+
+    // updating the number of reviews in product
+    product.numOfReviews = product.reviews.length;
+  }
+
+  // average rating calculation
+  let avgRating = 0;
+  product.reviews.forEach(rev => {
+    avgRating += rev.rating;
+  });
+  
+  // updating the ratings
+  product.ratings = avgRating / product.reviews.length;
+
+  // finally, save the document
+  await product.save({ validateBeforeSave: false });
+
+  // response
+  res.status(200).json({success: true});
+});
+
+/* ---------------------------------------------------------------------------------------- */
+
+// get all reviews 
+export const getAllReviews = handleAsyncErrors( async(req, res, next) => {
+  // find the product using the productId in query
+  const product = await Product.findById(req.query.productId);
+
+  // if product not found
+  if(!product){
+    return next(new ErrorHandler(404, "Product not found"))
+  }
+
+  // if found, fetch the reviews of the product
+  const reviews = product.reviews;
+
+  // response
+  res.status(200).json({success:true, reviews});
+});
+
+/* ----------------------------------------------------------------------------------------- */
+
+// delete a review -- login required
+export const deleteReview = handleAsyncErrors(async(req, res, next) => {
+  const product = await Product.findById(req.query.productId);
+
+  // if product not found
+  if (!product) {
+    return next(new ErrorHandler(404, "Product not found"));
+  }
+
+  // filter the review to be deleted from reviews
+  const reviews = product.reviews.filter((rev) => rev._id.toString() !== req.query.id);
+
+  // update the ratings and no of reviews
+  let avgRating = 0;
+  reviews.forEach((rev) => {
+    avgRating += rev.rating;
+  });
+
+  // updating the ratings
+  const ratings = avgRating / reviews.length;
+  const numOfReviews = reviews.length;
+
+  // updating in the database
+  await Product.findByIdAndUpdate(req.query.productId, { reviews, ratings, numOfReviews}, {new: true, runValidators: true, useFindAndModify: false});
+
+  // response
+  res.status(200).json({success: true, message: "Review Deleted Successfully"});
+  
+})

@@ -14,7 +14,7 @@ const productSchema = new Schema({
     type: Number,
     required: [true, "Enter the a valid price of producr"],
   },
-  rating: {
+  ratings: {
     type: Number,
     default: 0,
   },
@@ -38,9 +38,10 @@ const productSchema = new Schema({
   },
   reviews: [
     {
-      name: { type: String, required: [true, "Enter the a valid name for the image"] },
+      user: {type: Schema.ObjectId, ref: "User", required: true },
+      name: { type: String, required: [true, "Enter the a valid name"] },
       rating: { type: Number, default: 0 },
-      comment: { type: String, required: [true, "Enter a valid comment for the image"] },
+      comment: { type: String, required: [true, "Enter a valid comment"] },
     },
   ],
   user:{

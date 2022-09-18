@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap");
+
+:root {
+  --font-base: "Lato", sans-serif;
+  --secondry-font: "Roboto", sans-serif;
+  --primary-color: #1f252d;
+  --secondary-color: #ffca05;
+  --blue-color: #2f77f0;
+  --black-color: #030303;
+  --white-color: #c7cfdc;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+}

@@ -25,5 +25,6 @@
   "devDependencies": {
     "@types/validator": "^13.7.6",
     "nodemon": "^2.0.19"
-  }
+  },
+  "proxy": "http://192.168.121.42:5000"
 }

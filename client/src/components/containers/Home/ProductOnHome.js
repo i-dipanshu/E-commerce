@@ -14,7 +14,7 @@ function Product({ product }) {
 
   return (
     <Link
-      class="rounded-lg shadow-md  lg:w-1/4 md:w-1/2 w-full -my-4  scale-75 hover:scale-[1] ease-in duration-500"
+      class="rounded-lg shadow-md  lg:w-1/4 md:w-1/2 w-full -my-4  scale-75 hover:scale-[1] ease-in duration-300"
       to={product._id}
     >
       <a href="#">

@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import Product from "../Product/Product";
-import iphone from "../../images/iphone.png";
-import Metadata from "../Metadata";
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux";
 
-import {getProduct} from "../../actions/Product"
+import { getProduct } from "../../../redux/actions/product";
+
+import Product from "./ProductOnHome";
+import iphone from "../../../images/iphone.png";
+import Metadata from "../../Metadata";
 
 function Home() {
   const product = {
-    name: "Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport",
+    name: "Apple Watch Series 7 GPS, Aluminum Case, Starlight Sport",
     images: [`${iphone}`],
     price: "$599",
     _id: "adfaasfasf",
@@ -18,14 +19,14 @@ function Home() {
 
   useEffect(() => {
     dispatch(getProduct());
-  }, [dispatch])
-  
+  }, [dispatch]);
+
   return (
     <div>
       <Metadata title="Fashion Club" />
       <div>Home</div>
       <h2 className="font-bold text-center uppercase text-yellow-500 text-2xl">
-        On Demannd
+        On Demand
       </h2>
       <div>
         <hr className="w-1/6 m-auto my-8" />

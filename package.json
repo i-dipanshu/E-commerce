@@ -1,0 +1,19 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "A business grade e-commerce site",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-dipanshu/E-commerce.git"
+  },
+  "author": "Dipanshu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/i-dipanshu/E-commerce/issues"
+  },
+  "homepage": "https://github.com/i-dipanshu/E-commerce#readme"
+}

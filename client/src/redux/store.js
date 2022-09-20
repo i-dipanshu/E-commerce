@@ -5,7 +5,7 @@ import { productReducer } from './reducers/product';
 const store = configureStore({
     // and reducers combines those reducers
     reducer:{
-        product: productReducer,
+        products: productReducer,
     }
 })
 

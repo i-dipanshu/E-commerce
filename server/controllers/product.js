@@ -10,10 +10,9 @@ import Product from "../models/product.js";
 // function to create a new product --> admin
 
 export const createProduct = handleAsyncErrors(async (req, res, next) => {
-  // user is appended to req earlyhand by isUserAuthenticted
+  // user is appended to req early hand by isUserAuthenticated
   // appends id from req.user to req.body.user
   req.body.user = req.user.id;
-
   // creates a new document in the product schema
   // from the json data from req.body
   const product = await Product.create(req.body);
@@ -34,7 +33,7 @@ export const getAllProduct = handleAsyncErrors(async (req, res) => {
   const resultperpage = 5;
 
   // total no. of products in database
-  const productcount = await Product.countDocuments();
+  const productCount = await Product.countDocuments();
 
   // (query, queryStr) --> queryStr is keywords
   // api features --> search, filter category, pagination
@@ -44,7 +43,7 @@ export const getAllProduct = handleAsyncErrors(async (req, res) => {
   const products = await apiFeature.query;
 
   // response
-  res.status(200).json({success: true,products,productcount,});
+  res.status(200).json({success: true,products,productCount,});
 });
 
 /* -------------------------------------------------------------------------------------------- */

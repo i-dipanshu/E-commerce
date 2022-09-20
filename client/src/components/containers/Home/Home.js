@@ -8,18 +8,13 @@ import iphone from "../../../images/iphone.png";
 import Metadata from "../../Metadata";
 
 function Home() {
-  const product = {
-    name: "Apple Watch Series 7 GPS, Aluminum Case, Starlight Sport",
-    images: [`${iphone}`],
-    price: "$599",
-    _id: "adfaasfasf",
-  };
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProduct());
   }, [dispatch]);
+
+  const { loading, error, product, productCount } = useSelector(state => state.products);
 
   return (
     <div>
@@ -32,14 +27,7 @@ function Home() {
         <hr className="w-1/6 m-auto my-8" />
       </div>
       <div className="mx-4 p-20 flex flex-wrap justify-center ">
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
-        <Product product={product} />
+        {product && product.map((product) => (<Product product={product}/>))}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 
 // middleware imports
-import handleError from "./middlewares/erorr.js";
+import handleError from "./middlewares/error.js";
 
 // routes import
 import product from "./routes/product.js";

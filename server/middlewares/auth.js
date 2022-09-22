@@ -13,7 +13,7 @@ export const isUserAuthenticted = handleAsyncErrors(async (req, res, next) => {
 
   // if cookie not found
   if (!token) {
-    return next(new ErrorHandler(401, "Please login to access this resorces."));
+    return next(new ErrorHandler(401, "Please login to access this resource."));
   }
 
   // decode the cookies (or token)

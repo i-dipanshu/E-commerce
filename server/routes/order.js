@@ -1,7 +1,7 @@
 import express from 'express';
 import { deleteOrder, getAllOrders, getOrder, myOrder, newOrder, updateOrderStatus } from '../controllers/order.js';
 
-import { isUserAuthenticted, isRole } from "../middlewares/auth.js";
+import { isUserAuthenticated, isRole } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -10,24 +10,24 @@ const router = express.Router();
 /* ------------------------------------------------------- */
 
 // route to create a new order | login required
-router.post("/order/new", isUserAuthenticted, newOrder);
+router.post("/order/new", isUserAuthenticated, newOrder);
 
 // route to my orders | login required
-router.get('/orders/me', isUserAuthenticted, myOrder);
+router.get('/orders/me', isUserAuthenticated, myOrder);
 
 // route a get single order | login required
-router.get("/order/:id", isUserAuthenticted, getOrder);
+router.get("/order/:id", isUserAuthenticated, getOrder);
 
 /* --------------------     admin   ----------------------- */
 
 // route to get all the orders
-router.get("/admin/orders", isUserAuthenticted, isRole("admin"), getAllOrders);
+router.get("/admin/orders", isUserAuthenticated, isRole("admin"), getAllOrders);
 
 // route to update the status of order
-router.put("/admin/order/:id", isUserAuthenticted, isRole("admin"), updateOrderStatus);
+router.put("/admin/order/:id", isUserAuthenticated, isRole("admin"), updateOrderStatus);
 
 // route to delete a order
-router.delete("/admin/order/:id", isUserAuthenticted, isRole("admin"), deleteOrder);
+router.delete("/admin/order/:id", isUserAuthenticated, isRole("admin"), deleteOrder);
 
 
 

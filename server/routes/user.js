@@ -2,7 +2,7 @@ import express from "express";
 import { createNewUser, deleteUser, forgotPassword, getAllUsers, getUser, getUserDetails, loginUser, logoutUser, resetPassword, updatePassword, updateProfile, updateProfileAdmin } from "../controllers/user.js";
 
 // middleware imports
-import { isUserAuthenticted, isRole } from "../middlewares/auth.js";
+import { isUserAuthenticated, isRole } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -24,20 +24,20 @@ router.get('/password/forgot', forgotPassword);
 router.put('/password/reset/:token', resetPassword);
 
 // route to get user details
-router.get('/me', isUserAuthenticted, getUserDetails);
+router.get('/me', isUserAuthenticated, getUserDetails);
 
 // route to update user password
-router.put('/password/update', isUserAuthenticted, updatePassword);
+router.put('/password/update', isUserAuthenticated, updatePassword);
 
 // route to update profile
-router.put('/me/update', isUserAuthenticted, updateProfile);
+router.put('/me/update', isUserAuthenticated, updateProfile);
 
 /*-------------     admin routes        ----------------------*/
 
 // route to get all users -- for admin
-router.get('/admin/users', isUserAuthenticted, isRole("admin"), getAllUsers);
+router.get('/admin/users', isUserAuthenticated, isRole("admin"), getAllUsers);
 
 // route to get a user | update user details | delete a user | -- for admin
-router.route('/admin/user/:id').get(isUserAuthenticted, isRole("admin"), getUser).put(isUserAuthenticted, isRole("admin"), updateProfileAdmin).delete(isUserAuthenticted, isRole("admin"), deleteUser);
+router.route('/admin/user/:id').get(isUserAuthenticated, isRole("admin"), getUser).put(isUserAuthenticated, isRole("admin"), updateProfileAdmin).delete(isUserAuthenticated, isRole("admin"), deleteUser);
 
 export default router;

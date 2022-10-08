@@ -3,7 +3,7 @@ import { productReducer } from './reducers/product';
 
 // configureStore takes different reducers
 const store = configureStore({
-    // and reducers combines those reducers
+    // and reducer combines those reducers
     reducer:{
         products: productReducer,
     }

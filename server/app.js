@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 // middleware imports
 import handleError from "./middlewares/error.js";
@@ -19,6 +20,9 @@ app.use(express.json());
 
 // middleware to parse cookies
 app.use(cookieParser());
+
+// cors
+app.use(cors());
 
 // middleware to handle all the errors
 app.use(handleError);
